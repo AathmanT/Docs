@@ -1,0 +1,163 @@
+netty server
+ballerina service
+jmeter
+java executer threads
+
+runner threads
+worker threads
+ballerina worker threads
+
+jmeter send request and measure throughput and latency in the ballerina post 
+service then use machine learning to set the fixed ballerina worker threads
+
+implement a way to set the ballerina worker threads default is 100.
+
+latency
+99 percentile latency
+
+=====================================
+parameterization
+thread dump
+3 instances in the cluser
+1 jmeter 2 ballerina 3 backend
+jtl files each for 50 100 200 300 400 500
+plot the graph average of tps latency 99% latency 90%  vs concurrency 50 100 200 300 400 500 not the distribution
+====================================
+
+threadpool size 4 8 10 50 100 500
+byte size 50B 1024B 
+2 use cases simple passthrogh >>>>>>>> h1_h1_passthrough 
+and transformation >>>>>>>>>>>>>>  h1_transformation
+6 concurrency 1 10 100 200 300 400 500
+
+============================================
+
+to download results form jmeter-client
+scp wso2@192.168.32.8:~/jmeter/summary.csv ~/newResults/
+scp ~/newResults/run-performance-tests.sh wso2@192.168.32.8:~/jmeter/
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 400 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_transformation_t4 -i h1_h1_passthrough_t4 -i h1_transformation_t8 -i h1_h1_passthrough_t8 -i h1_transformation_t10 -i h1_h1_passthrough_t10 -i h1_transformation_t50 -i h1_h1_passthrough_t50 -i h1_transformation_t100 -i h1_h1_passthrough_t100 -i h1_transformation_t500 -i h1_h1_passthrough_t500 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 400 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_h1_passthrough_t100 -i h1_transformation_t500 -i h1_h1_passthrough_t500 &
+
+./create-summary-csv.sh -n ballerina -p ballerina -g gcviewer.jar -d ~/results
+
+=====================================================
+/usr/lib/ballerina/ballerina-0.991.0/bin/ballerina run -e b7a.runtime.scheduler.threadpoolsize=500 --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide 
+
+ps aux | grep java
+kill -9 24312^C
+===================================================
+
+192.168.32.4 setup-ballerina.sh -n 192.168.32.9 done
+192.168.32.8 setup-jmeter-client-ballerina.sh  done
+192.168.32.9 setup-netty.sh done
+
+=======================================
+
+pandas to regex and create another column
+==================================
+
+npm run build
+npm i
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/tool-plugins/vscode$ 
+cd tool-plugins/vscode/
+sudo ./gradlew clean build -x test -x check 
+run withput sudo
+sudo ./gradlew clean build -x test -x check --info
+ sudo ./gradlew clean build -x test -x check --debug
+ll
+sudo ./gradlew clean build -x test -x check --rerun-tasks --no-build-cache
+change node version as in github
+
+
+
+
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang$ cd /home/aathmsn/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc/build
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc/build$ cd .
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc/build$ cd ..
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc$ rm -rf build
+rm: cannot remove 'build/test-bir-temp/table_iteration-6564178458364016231': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_actions_test-2172736311449642874': Permission denied
+rm: cannot remove 'build/test-bir-temp/connection_pool_test-8382483149931707533': Permission denied
+rm: cannot remove 'build/test-bir-temp/connection_pool_test-6257574295926015420': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_connector_init_test-1110007983465632433': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_connector_init_test-4549382938870334726': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_actions_test-6391562513574450875': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_actions_test-4415346194419281313': Permission denied
+rm: cannot remove 'build/test-bir-temp/table_iteration-1381020228676361337': Permission denied
+rm: cannot remove 'build/test-bir-temp/sql_actions_negative_test-872950302180570371': Permission denied
+rm: cannot remove 'build/test-results/test/binary/output.bin': Permission denied
+rm: cannot remove 'build/test-results/test/binary/results.bin': Permission denied
+rm: cannot remove 'build/test-results/test/binary/output.bin.idx': Permission denied
+rm: cannot remove 'build/reports/tests/test/classes/org.ballerinax.jdbc.SQLActionsTest.html': Permission denied
+rm: cannot remove 'build/reports/tests/test/classes/org.ballerinax.jdbc.SQLConnectorInitTest.html': Permission denied
+rm: cannot remove 'build/reports/tests/test/classes/org.ballerinax.jdbc.table.TableIterationTest.html': Permission denied
+rm: cannot remove 'build/reports/tests/test/classes/org.ballerinax.jdbc.SQLConnectionPoolTest.html': Permission denied
+rm: cannot remove 'build/reports/tests/test/packages/org.ballerinax.jdbc.table.html': Permission denied
+rm: cannot remove 'build/reports/tests/test/packages/org.ballerinax.jdbc.html': Permission denied
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc$ ll
+total 368
+drwxr-xr-x  5 aathmsn aathmsn   4096 Jul 12 16:35 ./
+drwxr-xr-x 42 aathmsn aathmsn   4096 Jul 12 14:30 ../
+drwxr-xr-x  2 aathmsn aathmsn   4096 Jul 12 14:30 assembly/
+-rw-r--r--  1 aathmsn aathmsn   4532 Jul 12 14:30 build.gradle
+-rw-r--r--  1 aathmsn aathmsn 103932 Jul 12 15:33 hs_err_pid27350.log
+-rw-r--r--  1 aathmsn aathmsn 107297 Jul 12 15:33 hs_err_pid28330.log
+-rw-r--r--  1 root    root    103856 Jul 12 15:40 hs_err_pid32153.log
+-rw-r--r--  1 aathmsn aathmsn  18395 Jul 12 14:30 pom.xml
+-rw-r--r--  1 aathmsn aathmsn   1024 Jul 12 14:30 spotbugs-exclude.xml
+drwxr-xr-x  4 aathmsn aathmsn   4096 Jul 12 14:30 src/
+drwxr-xr-x  2 aathmsn aathmsn   4096 Jul 12 15:56 target/
+aathmsn@aathman:~/NewBallerinaCompilations/ballerina-lang/stdlib/jdbc$ 
+
+
+mvn clean install -Dmaven.test.skip=true -Dcheckstyle.skip Dspotbugs.skip=true -Dpmd.skip=true -Dmaven.javadoc.skip=true -pl '!composer,!tool-plugins/vscode' -rf :benchmarks
+
+mvn clean install -Dmaven.test.skip=true -Dcheckstyle.skip Dspotbugs.skip=true -Dpmd.skip=true -Dmaven.javadoc.skip=true -pl '!composer,!tool-plugins/vscode' 
+
+==========================================================================
+Build ballerina
+==========================================================================
+
+aathmsn@aathman:~/BuildingBallerina/ballerina-lang$ mvn clean install -Dmaven.test.skip=true -Dcheckstyle.skip -Dspotbugs.skip=true -Dpmd.skip=true -Dmaven.javadoc.skip=true -pl '!composer,!tool-plugins/vscode' 
+
+
+/home/aathmsn/Downloads/Compressed/EditedThreadsize/ballerina-0.990.2-SNAPSHOT/bin/ballerina  run  --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide 
+
+
+================================================================================
+core and maximum pool sizes may also be changed dynamically using setCorePoolSize(int) and setMaximumPoolSize(int).
+================================================================================
+
+/home/aathmsn/Downloads/Compressed/Fullyparametrized/ballerina-0.990.2-SNAPSHOT/bin/ballerina run -e b7a.runtime.scheduler.corepoolsize=25 -e b7a.runtime.scheduler.maxpoolsize=200 -e b7a.runtime.scheduler.queuecapacity=2147483647 -e b7a.runtime.scheduler.queuetype=linked -e b7a.runtime.scheduler.keepalivetime=60  --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide 
+
+nohup /usr/lib/ballerina/ballerina-0.991.0/bin/ballerina run --observe --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide > ballerina.log &
+
+/usr/lib/ballerina/ballerina-0.991.0/bin/ballerina run --observe --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide
+
+/usr/lib/jvm/jdk-12.0.1/bin/java -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -classpath /home/aathmsn/IdeaProjects/MBean/out/production/MBean Gaming
+
+==========================================
+java -jar jolokia-jvm.jar start 5417
+
+
+/home/aathmsn/Downloads/Compressed/Test/ballerina-0.990.2-SNAPSHOT/bin/ballerina run -e b7a.runtime.scheduler.corepoolsize=25 -e b7a.runtime.scheduler.maxpoolsize=200 -e b7a.runtime.scheduler.queuecapacity=2147483647 -e b7a.runtime.scheduler.queuetype=linked -e b7a.runtime.scheduler.keepalivetime=60  --observe --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide 
+
+====================================================
+
+t4 50 100 500
+users 10 100 200 300 400 500 
+1min querying
+
+Ballerina server
+================================================
+/bin/bash /usr/bin/ballerina run -e b7a.runtime.scheduler.threadpoolsize=4 --observe ~/ballerina/bal/h1_h1_passthrough.balx
+===================================================
+http_requests_total_value{protocol="http",http_method="POST",resource="transform",http_url="/transform",service="transformationService$$service$0",}
+
+http_requests_total_value{protocol="http",http_method="POST",service="passthroughService$$service$0",http_url="/passthrough",resource="passthrough",}
+
+./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 400 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_transformation_t4 -i h1_h1_passthrough_t4 -i h1_transformation_t50 -i h1_h1_passthrough_t50 -i h1_transformation_t100 -i h1_h1_passthrough_t100 -i h1_transformation_t500 -i h1_h1_passthrough_t500 
+
+ps -ef to get all process
