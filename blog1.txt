@@ -1,0 +1,5 @@
+first clone the performance common from git and build it using maven
+then clone ballerina performance from git and built it using maven
+copy the ballerina performance distribution.tar.gz to all 3 servers and extract it and install using the setup scripts
+
+install curl, make, gcc, git  

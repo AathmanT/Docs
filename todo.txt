@@ -40,6 +40,7 @@ nohup ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 
 
 nohup ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 400 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_h1_passthrough_t100 -i h1_transformation_t500 -i h1_h1_passthrough_t500 &
 
+cd jmeter/
 ./create-summary-csv.sh -n ballerina -p ballerina -g gcviewer.jar -d ~/results
 
 =====================================================
@@ -161,3 +162,19 @@ http_requests_total_value{protocol="http",http_method="POST",service="passthroug
 ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 400 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_transformation_t4 -i h1_h1_passthrough_t4 -i h1_transformation_t50 -i h1_h1_passthrough_t50 -i h1_transformation_t100 -i h1_h1_passthrough_t100 -i h1_transformation_t500 -i h1_h1_passthrough_t500 
 
 ps -ef to get all process
+
+./jmeter/run-performance-tests.sh -m 4G -u 250 -u 500 -b 50 -s 0 -d 1500 -w 300 -i h1_transformation_t100 -i h1_h1_passthrough_t100 
+
+run the tests and get the 20th 1 minute(timeWindow=60000) mean ,stdDev throughput and compare with jmeter.
+
+pkill -f checkrequest.py
+
+scp wso2@192.168.32.4:~/15* ~/prometheusResults/
+
+===================================================================
+use alpha ballerina and do all the tests first.
+change netty backend to ballerina and change the threadpool of both and get the results
+
+./gradlew build -x test -x check -x composer-library:npmInstall -x composer-library:npmBuild
+
+./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -s 0 -d 300 -w 120 -i h1_h1_passthrough_b10_e10 -i h1_h1_passthrough_b10_e100 -i h1_h1_passthrough_b100_e10 -i h1_h1_passthrough_b100_e10
