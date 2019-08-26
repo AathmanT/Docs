@@ -177,4 +177,6 @@ change netty backend to ballerina and change the threadpool of both and get the 
 
 ./gradlew build -x test -x check -x composer-library:npmInstall -x composer-library:npmBuild
 
-./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -s 0 -d 300 -w 120 -i h1_h1_passthrough_b10_e10 -i h1_h1_passthrough_b10_e100 -i h1_h1_passthrough_b100_e10 -i h1_h1_passthrough_b100_e10
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_h1_passthrough_b10_e10 -i h1_h1_passthrough_b10_e100 -i h1_h1_passthrough_b100_e10 -i h1_h1_passthrough_b100_e10 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_transformation_b10_e10 -i h1_transformation_b10_e100 -i h1_transformation_b100_e10 -i h1_transformation_b100_e10 &
