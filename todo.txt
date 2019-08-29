@@ -180,3 +180,13 @@ change netty backend to ballerina and change the threadpool of both and get the 
 nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_h1_passthrough_b10_e10 -i h1_h1_passthrough_b10_e100 -i h1_h1_passthrough_b100_e10 -i h1_h1_passthrough_b100_e10 &
 
 nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_transformation_b10_e10 -i h1_transformation_b10_e100 -i h1_transformation_b100_e10 -i h1_transformation_b100_e10 &
+
+=======================================================================
+do the prime tests for 521,10007,100003,10000019
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server -i ballerina_prime_server_10007_no_echo_server -i ballerina_prime_server_100003_no_echo_server -i ballerina_prime_server_10000019_no_echo_server -i h1_transformation_b10_e10 -i h1_transformation_b10_e100 -i h1_transformation_b100_e10 -i h1_transformation_b100_e10 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server -i ballerina_prime_server_10007_no_echo_server -i ballerina_prime_server_100003_no_echo_server -i ballerina_prime_server_10000019_no_echo_server &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 10 -u 100 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server_t10 -i ballerina_prime_server_10007_no_echo_server_t10 -i ballerina_prime_server_100003_no_echo_server_t10 -i ballerina_prime_server_10000019_no_echo_server_t10 -i ballerina_prime_server_521_no_echo_server_t100 -i ballerina_prime_server_10007_no_echo_server_t100 -i ballerina_prime_server_100003_no_echo_server_t100 -i ballerina_prime_server_10000019_no_echo_server_t100 &
+
