@@ -188,5 +188,16 @@ nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024
 
 nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server -i ballerina_prime_server_10007_no_echo_server -i ballerina_prime_server_100003_no_echo_server -i ballerina_prime_server_10000019_no_echo_server &
 
-nohup ./jmeter/run-performance-tests.sh -m 4G -u 10 -u 100 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server_t10 -i ballerina_prime_server_10007_no_echo_server_t10 -i ballerina_prime_server_100003_no_echo_server_t10 -i ballerina_prime_server_10000019_no_echo_server_t10 -i ballerina_prime_server_521_no_echo_server_t100 -i ballerina_prime_server_10007_no_echo_server_t100 -i ballerina_prime_server_100003_no_echo_server_t100 -i ballerina_prime_server_10000019_no_echo_server_t100 &
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_server_521_no_echo_server_t10 -i ballerina_prime_server_10007_no_echo_server_t10 -i ballerina_prime_server_100003_no_echo_server_t10 -i ballerina_prime_server_10000019_no_echo_server_t10 -i ballerina_prime_server_521_no_echo_server_t100 -i ballerina_prime_server_10007_no_echo_server_t100 -i ballerina_prime_server_100003_no_echo_server_t100 -i ballerina_prime_server_10000019_no_echo_server_t100 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_521_passthrough_t10_ballerina_prime_echo_t10 -i ballerina_prime_521_passthrough_t100_ballerina_prime_echo_t10 -i ballerina_prime_521_passthrough_t10_ballerina_prime_echo_t100 -i ballerina_prime_521_passthrough_t100_ballerina_prime_echo_t100 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i ballerina_prime_521_passthrough_t10_ballerina_prime_echo_t10 -i ballerina_prime_521_passthrough_t100_ballerina_prime_echo_t10 -i ballerina_prime_521_passthrough_t10_ballerina_prime_echo_t100 -i ballerina_prime_521_passthrough_t100_ballerina_prime_echo_t100 -i ballerina_prime_10007_passthrough_t10_ballerina_prime_echo_t10 -i ballerina_prime_10007_passthrough_t100_ballerina_prime_echo_t10 -i ballerina_prime_10007_passthrough_t10_ballerina_prime_echo_t100 -i ballerina_prime_10007_passthrough_t100_ballerina_prime_echo_t100 -i ballerina_prime_100003_passthrough_t10_ballerina_prime_echo_t10 -i ballerina_prime_100003_passthrough_t100_ballerina_prime_echo_t10 -i ballerina_prime_100003_passthrough_t10_ballerina_prime_echo_t100 -i ballerina_prime_100003_passthrough_t100_ballerina_prime_echo_t100 -i ballerina_prime_10000019_passthrough_t10_ballerina_prime_echo_t10 -i ballerina_prime_10000019_passthrough_t100_ballerina_prime_echo_t10 -i ballerina_prime_10000019_passthrough_t10_ballerina_prime_echo_t100 -i ballerina_prime_10000019_passthrough_t100_ballerina_prime_echo_t100 &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1_h1_passthrough_b10_e10_alpha -i h1_h1_passthrough_b10_e100_alpha -i h1_h1_passthrough_b100_e10_alpha -i h1_h1_passthrough_b100_e100_alpha &
+
+=======================================================================
+current problems with baysian optimization
+1) oscillating in the local minima
+2) context change
 
