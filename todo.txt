@@ -53,7 +53,7 @@ kill -9 24312^C
 192.168.32.4 setup-ballerina.sh -n 192.168.32.9 done
 192.168.32.8 setup-jmeter-client-ballerina.sh  done
 192.168.32.9 setup-netty.sh done
-
+192.168.32.5 auto-tuning
 =======================================
 
 pandas to regex and create another column
@@ -201,3 +201,113 @@ current problems with baysian optimization
 1) oscillating in the local minima
 2) context change
 
+===========================================================================
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1c_h1c_passthrough_default_alpha -i ballerina_prime_server_521_no_echo_server_alpha -i ballerina_prime_server_10007_no_echo_server_alpha -i ballerina_prime_server_100003_no_echo_server_alpha -i ballerina_prime_server_10000019_no_echo_server_alpha &
+
+=========================================================================
+fligh record with 500concurrency echo service.
+5 min jfr measure
+run for 10 min
+
+==========================================================================
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1c_h1c_passthrough_default_alpha_netty &
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024 -s 0 -d 300 -w 120 -i h1c_h1c_passthrough_default_alpha_t100_netty &
+
+=======================================
+allocation tests
+jfr
+====================================
+export FLAMEGRAPH_DIR=~/Downloads/FlameGraph/
+./create_flamegraph.sh -f ~/ballerina/bal/recording100.jfr -i > flamegraph100.svg
+./create_flamegraph.sh -e allocation-tlab -f ~/ballerina/bal/recording100.jfr -i > flamegraph100_allocation.svg
+
+
+nohup jcmd $(pgrep -f h1c) JFR.start delay=20s duration=300s name=Test filename=recordingtest.jfr settings=profile &
+
+========================================
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 500 -b 1024 -s 0 -d 300 -w 120 -i h1c_h1c_passthrough_default_alpha_netty_jfr &
+
+================================================
+Problems
+1) jfr can work with jar only not with bal file
+2) jar can work with java 8 only
+3) open jdk 8 doesn't have jfr
+solution use oracle jdk8
+
+==========================================================
+change the internal jdk of 1.0.0 by changeing /usr/lib/1.0.0/jballerina/bin/ballerina.sh and set JAVA_PATH to oracle jdk8
+=========================================================
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 500 -b 1024 -s 0 -d 300 -w 120 -i h1c_h1c_passthrough_default_1.0.0_netty &
+
+==========================================================
+Checkout the patch in the 9 jfr flight recording branch if you have error running jar tests it is due to pkill -f h1
+git checkout 3ba9fd5c287b508818a50b218b578a3706f58f1b 
+============================================================
+
+nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -b 50 -s 0 -d 600 -w 120 -i h1c_h1c_passthrough_default_1.0.0_netty &
+
+-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=600s,name=Test,filename=recording991.jfr,settings=profile 
+
+export JAVA_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=600s,name=Test,filename=recording100.jfr,settings=profile" 
+
+
+=================================================================
+Combining everything
+===============================================
+
+java -jar ~/LocalBuildBallerinaPerformanceTest/performanceCommon/performance-common/components/netty-http-echo-service/target/netty-http-echo-service-0.3.1-SNAPSHOT.jar 
+
+/home/aathmsn/Downloads/Compressed/Test/ballerina-0.990.2-SNAPSHOT/bin/ballerina run -e b7a.runtime.scheduler.corepoolsize=25 -e b7a.runtime.scheduler.maxpoolsize=200 -e b7a.runtime.scheduler.queuetype=default-linked -e b7a.runtime.scheduler.keepalivetime=10 --observe ~/LocalBuildBallerinaPerformanceTest/extracted\ from\ the\ zip/ballerina/bal/h1c_h1c_passthrough.bal
+
+cd ~/Downloads/apache-jmeter-5.1.1/bin
+./jmeter -n -t SequentialTest.jmx 
+
+sleep 20 
+
+cd ~/IdeaProjects/netty-performace-tuning/
+python bayesian_both.py 
+
+===========================================================
+-(1) t100 java -jar -> summary.csv
+-(2) t10 t100 java -jar -> JFR,Flamegraph 
+(3) t10 java -jar decrease the contention threshhold -> JFR only
+===========================================================
+
+edit the ballerina-0.992-SNAPSHOT/bin/ballerina file and set JAVA_HOME="/usr/java/jdk1.8.0_211-amd64" in the top
+to fix JAVA_HOME not set
+
+netty server ballerina-echo.bal didn't work becasue I uploaded the wrong ballerina SNAPSHOT.
+correct one is under Test folder Fullyparameterized folder is wrong
+=========================================================
+
+ curl -d '{"size":"50B","payload":["0123456789","ABCDEFGH"]}' -H "Content-Type: application/json" -X POST http://127.0.0.1:8688/service/EchoService
+
+==========================================================
+auto tune
+1) prime and echo one server 
+2) netty prime
+==========================================================
+Problem
+When setting core pool size to a lower value than before it didn't drop to that value.
+But, dropped a little according to keep alive time.
+
+Solution
+set both corepool and max to a lower value
+Then it will suddenly drop.
+==============================================================
+
+============================================================
+Remote jmx jconsole
+
+JAVA_OPTS+=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.rmi.port=12345 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=localhost"
+
+jconsole localhost:12345
+
+ssh -L 12345:localhost:12345 wso2@192.168.32.4
+
+============================================================
