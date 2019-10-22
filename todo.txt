@@ -253,7 +253,7 @@ nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -b 50 -s 0 -d 600 -w 120 -i
 
 -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=600s,name=Test,filename=recording991.jfr,settings=profile 
 
-export JAVA_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=600s,name=Test,filename=recording100.jfr,settings=profile" 
+export JAVA_OPTS="-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=delay=20s,duration=300s,name=Test,filename=recording991echo.jfr,settings=profile" 
 
 
 =================================================================
@@ -262,10 +262,9 @@ Combining everything
 
 java -jar ~/LocalBuildBallerinaPerformanceTest/performanceCommon/performance-common/components/netty-http-echo-service/target/netty-http-echo-service-0.3.1-SNAPSHOT.jar 
 
-/home/aathmsn/Downloads/Compressed/Test/ballerina-0.990.2-SNAPSHOT/bin/ballerina run -e b7a.runtime.scheduler.corepoolsize=25 -e b7a.runtime.scheduler.maxpoolsize=200 -e b7a.runtime.scheduler.queuetype=default-linked -e b7a.runtime.scheduler.keepalivetime=10 --observe ~/LocalBuildBallerinaPerformanceTest/extracted\ from\ the\ zip/ballerina/bal/h1c_h1c_passthrough.bal
+/home/aathmsn/Downloads/Compressed/Test/ballerina-0.990.2-SNAPSHOT/bin/ballerina run -e b7a.runtime.scheduler.corepoolsize=100 -e b7a.runtime.scheduler.maxpoolsize=100 -e b7a.runtime.scheduler.queuetype=default-linked -e b7a.runtime.scheduler.keepalivetime=60 --observe ~/LocalBuildBallerinaPerformanceTest/extracted\ from\ the\ zip/ballerina/bal/h1c_h1c_passthrough.bal
 
-cd ~/Downloads/apache-jmeter-5.1.1/bin
-./jmeter -n -t SequentialTest.jmx 
+~/Downloads/apache-jmeter-5.1.1/bin/jmeter -n -t ~/Downloads/apache-jmeter-5.1.1/bin/SequentialTest.jmx
 
 sleep 20 
 
@@ -306,8 +305,126 @@ Remote jmx jconsole
 
 JAVA_OPTS+=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.rmi.port=12345 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=localhost"
 
+ssh -L 12346:localhost:12346 wso2@192.168.32.4
+ssh -L 12345:localhost:12345 wso2@192.168.32.9
+
 jconsole localhost:12345
-
-ssh -L 12345:localhost:12345 wso2@192.168.32.4
-
+jconsole localhost:12346
 ============================================================
+
+one server echo and prime 1hour default and tuning 50 100
+simple passthrough default and tune passthrough 1 hour 50 100
+simple passthrough default and tune backend 1 hour 50 100
+
+1hour 50 100 default
+------------one-server-echo-prime 
+------------simple passthrough
+
+---------------one-server-echo-prime --> auto tune 50 100
+---------------simple passthrough --> auto tune passthrough 50 100
+---------------simple passthrough --> auto tune backend  50 100
+
+######passthrough no prime and and netty prime tune
+######and do for all concurrencies. 
+
+=============================================================
+ssh netty "java -jar ~/auto-tuning/MBean.jar set 10"
+curl -X GET http://192.168.32.4:9797/metrics
+=============================================================
+3 graphs
+99%,mean,tps
+default vs tuned
+-------------for prime  
+for passthrough backend prime
+
+from jtl create summary for 30 minutes and 1 hour for both cases.
+and plot them
+==========================================================
+
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/default-passthrough-echo-prime/results/h1c_passthrough_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/
+/home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/
+/home/aathmsn/newResults/Auto-tuning\ /phase\ 3/passthrough\ 100\ ballerina\ tune/
+/home/aathmsn/newResults/Auto-tuning\ /phase\ 3/passthrough\ backend\ prime\ global\ tune/
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/default-passthrough-echo-prime/results/h1c_passthrough_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/
+/home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/default-passthrough-echo-prime/
+/home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/global-tune-passthrough-echo-prime/
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/default-passthrough-echo-prime/results/h1c_passthrough_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/default-passthrough-echo-prime/
+wso2@192.168.32.8's password: 
+custom_summary.csv                            100%   87     2.1KB/s   00:00    
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/global-tune-passthrough-echo-prime/results/h1c_passthrough_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/global-tune-passthrough-echo-prime/
+wso2@192.168.32.8's password: 
+custom_summary_30min.csv                      100%   91     2.3KB/s   00:00    
+custom_summary.csv                            100%   89     2.2KB/s   00:00    
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/prime-one-server-default/results/h1c_echo_prime_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/prime-one-server-default/
+wso2@192.168.32.8's password: 
+custom_summary.csv                            100%   89     1.8KB/s   00:00    
+aathmsn@aathman:~$ scp wso2@192.168.32.8:~/results-backup/prime-one-server-tune/results/h1c_echo_prime_new/4G_heap/100_users/50B/0ms_sleep/custom_summary* /home/aathmsn/newResults/Auto-tuning\ /phase\ 3/jtl\ summaries/prime-one-server-tune/ 
+wso2@192.168.32.8's password: 
+custom_summary_30min.csv                      100%   90     1.3KB/s   00:00    
+custom_summary.csv                            100%   89     2.1KB/s   00:00    
+aathmsn@aathman:~$ 
+
+===================================================
+export BALLERINA_MAX_POOL_SIZE=100
+===================================================
+
+wso2@wso2-System-Product-Name:~/results-backup/default-passthrough-echo-prime$ stat -c "%y" results.zip 
+2019-09-28 16:13:45.697966439 +0530
+
+wso2@wso2-System-Product-Name:~/results-backup/global-tune-passthrough-echo-prime$ stat -c "%y" results.zip
+2019-09-28 17:29:03.021515558 +0530
+
+wso2@wso2-System-Product-Name:~/results-backup/prime-one-server-tune$ stat -c "%y" results.zip
+2019-09-28 19:08:44.691273459 +0530
+
+wso2@wso2-System-Product-Name:~/results-backup/prime-one-server-default$ stat -c "%y" results.zip
+2019-09-28 20:47:53.402253204 +0530
+
+=======================================================
+1) database same test with mysql connection pool set to 500
+	clear the table after each test
+2) do the test with select statement for 10000 and select by an id
+=======================================================
+-------jmter direct hit dataase with jdpc 1,10,100,200,500
+-------read the papers amd give the motes
+-------do the spydriver
+-------change connection poolsize in hickariCP and run tests for different sizes.
+find about BestConfig
+do tpc benchmark
+find about workload compression
+find about parameters that require restart MySQL
+find about W1-SF1,W2-SF1
+-------semd mail to research papaers
+========================================
+~/Downloads/apache-jmeter-5.1.1/bin/jmeter -Jgroup1.threads=100 -Jgroup1.seconds=3000 -n -t ~/Downloads/apache-jmeter-5.1.1/bin/DB_Test.jmx 
+
+================================
+----500,100,10
+----5min warmup 60min
+----simple passthrough netty
+========================================
+mysql -u root -proot -D testdb -e "select * from student where id=1"
+mysqld --verbose --help
+mysqladmin variables
+
+
+mysql> show variables like 'innodb_buffer_pool_size';
++-------------------------+-----------+
+| Variable_name           | Value     |
++-------------------------+-----------+
+| innodb_buffer_pool_size | 134217728 |
++-------------------------+-----------+
+1 row in set (0.01 sec)
+
+mysql> set global innodb_buffer_pool_size=200000000;
+
+while read -a row; do     echo "..${row[0]}..${row[1]}.."; done < <(echo "show variables like 'innodb_buffer_pool_size';" | mysql -u root -proot);
+
+while read a b; do     echo "..${a}..${b}.."; done < <(echo "show variables like 'innodb_buffer_pool_size';" | mysql -u root -proot);
+
+aathmsn@aathman:~$ array=();while read -a row; do     array=${row[1]}; done < <(echo "show variables like 'innodb_buffer_pool_size';" | mysql -u root -proot);echo 'innodb_buffer_pool_size = '${array};
+mysql: [Warning] Using a password on the command line interface can be insecure.
+innodb_buffer_pool_size = 268435456
+=============================================
+hikari 500 max_connections and 500 hickaripoolsize
+jfr comaprison openbanking
