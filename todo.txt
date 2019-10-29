@@ -428,3 +428,33 @@ innodb_buffer_pool_size = 268435456
 =============================================
 hikari 500 max_connections and 500 hickaripoolsize
 jfr comaprison openbanking
+
+
+========================================================
+
+-------use ottertune DDPG in the code
+find the latency
+
+state 63 internal metrics
+========================================================
+extrnal metrics 
+
+sysbench oltp_read_only --table_size=100000 --db-driver=mysql --mysql-db=testdb --mysql-user=root --mysql-password=root prepare
+sysbench oltp_read_only --table_size=1000000 --db-driver=mysql --mysql-db=testdb --mysql-user=root --mysql-password=root --max-time=60  --max-requests=0 --num-threads=8 run
+=========================================================
+upload.py( main() ----> upload()   ) views.py (new_result ----> handle_result_files  ----> configuration_recommendation_ddpg.s() ----> result.save())
+
+=========================================================
+docker
+=========================================================
+sudo docker pull arifiorino/ottertune-server
+sudo docker run -p 8000:8000 arifiorino/ottertune-server
+
+aathmsn@aathman:~$ sudo docker ps
+CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS              PORTS                    NAMES
+ddcb087a5d6e        arifiorino/ottertune-server   "/bin/sh -c 'service…"   12 minutes ago      Up 12 minutes       0.0.0.0:8000->8000/tcp   dreamy_agnesi
+aathmsn@aathman:~$ sudo docker stop dreamy_agnesi
+dreamy_agnesi
+
+sudo docker exec -it dreamy_agnesi bash
+sudo docker logs dreamy_agnesi
