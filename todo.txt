@@ -468,13 +468,29 @@ new_result << upload_result task << loop task << run_loops task
 =====================================================
 ottertune
 =====================================================
-cd ~/GitProjectsofothers/ottertune/app/client/driver/
-fab run_loops
+git clone https://github.com/cmu-db/ottertune.git
+mkdir -p /app
+cp . /app
+cd /app/server/website
+cp ./docker/credentials.py ./website/settings
+cp ./docker/start.sh .
+cp ./docker/wait-for-it.sh .
+
+chmod +x ./*.sh
+
+sed s/'@localhost'/'@rabbitmq'/g ./website/settings/common.py > tmp \
+    && mv tmp ./website/settings/common.py
+
+install rabbitmq
+
 
 /home/aathmsn/anaconda3/bin/python /home/aathmsn/GitProjectsofothers/ottertune/app/server/website/manage.py runserver localhost:8000
 
 cd ~/GitProjectsofothers/ottertune/app/server/website
 ./start.sh 
+
+cd ~/GitProjectsofothers/ottertune/app/client/driver/
+fab run_loops
 
 ===============================================================
 if ottertune doesn't start due to wrong configurations
@@ -492,6 +508,7 @@ aathmsn@aathman:/etc/postgresql/10/main$ sudo rm postgresql.conf
 
 aathmsn@aathman:/etc/postgresql/10/main$ sudo mv postgresql.conf.ottertune.bak postgresql.conf
 
+sudo service postgresql restart
 
 ========================================================
 install and uninstall postgres
