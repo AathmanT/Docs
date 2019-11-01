@@ -458,3 +458,61 @@ dreamy_agnesi
 
 sudo docker exec -it dreamy_agnesi bash
 sudo docker logs dreamy_agnesi
+
+imitation learning
+vanilla networks train and forgets faster
+dagger algorithm
+
+new_result << upload_result task << loop task << run_loops task
+
+=====================================================
+ottertune
+=====================================================
+cd ~/GitProjectsofothers/ottertune/app/client/driver/
+fab run_loops
+
+/home/aathmsn/anaconda3/bin/python /home/aathmsn/GitProjectsofothers/ottertune/app/server/website/manage.py runserver localhost:8000
+
+cd ~/GitProjectsofothers/ottertune/app/server/website
+./start.sh 
+
+===============================================================
+if ottertune doesn't start due to wrong configurations
+===============================================================
+
+sudo -u postgres /usr/lib/postgresql/10/bin/pg_ctl -D /var/lib/postgresql/10/main -w restart
+
+aathmsn@aathman:~$ cd /etc/postgresql/10/main/
+
+aathmsn@aathman:/etc/postgresql/10/main$ ls
+conf.d       pg_ctl.conf  pg_ident.conf    postgresql.conf.ottertune.bak
+environment  pg_hba.conf  postgresql.conf  start.conf
+
+aathmsn@aathman:/etc/postgresql/10/main$ sudo rm postgresql.conf
+
+aathmsn@aathman:/etc/postgresql/10/main$ sudo mv postgresql.conf.ottertune.bak postgresql.conf
+
+
+========================================================
+install and uninstall postgres
+========================================================
+sudo apt-get --purge remove postgresql postgresql-10 postgresql-client-10 postgresql-client-common postgresql-common
+sudo apt-get install postgresql
+sudo nano /etc/postgresql/10/main/pg_hba.conf
+sudo service postgresql restart
+
+aathmsn@aathman:~$ sudo -i -u postgres
+[sudo] password for aathmsn: 
+$ psql
+psql (10.10 (Ubuntu 10.10-0ubuntu0.18.04.1))
+Type "help" for help.
+
+postgres=# create database tpcc;
+CREATE DATABASE
+postgres=# \q
+could not save history to file "/opt/PostgreSQL/9.6/.psql_history": Permission denied
+$ exit
+
+=======================================================
+
+
