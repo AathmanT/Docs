@@ -514,9 +514,14 @@ sudo service postgresql restart
 install and uninstall postgres
 ========================================================
 sudo apt-get --purge remove postgresql postgresql-10 postgresql-client-10 postgresql-client-common postgresql-common
-sudo apt-get install postgresql
-sudo nano /etc/postgresql/10/main/pg_hba.conf
+sudo apt-get --purge remove postgresql*
+remove any directories it says manually
+
+sudo apt-get install postgresql postgresql-contrib
+sudo nano /etc/postgresql/10/main/pg_hba.conf    
+===================change all the peer to trust=============================
 sudo service postgresql restart
+sudo -u postgres /usr/lib/postgresql/10/bin/pg_ctl -D /var/lib/postgresql/10/main -w restart
 
 aathmsn@aathman:~$ sudo -i -u postgres
 [sudo] password for aathmsn: 
@@ -531,5 +536,8 @@ could not save history to file "/opt/PostgreSQL/9.6/.psql_history": Permission d
 $ exit
 
 =======================================================
+highlight imitation learning based not disaster recovery 
+dvisible for 3 persons
 
-
+'python3 manage.py celery worker --loglevel=DEBUG --pool=threads --pidfile=celery.pid > /dev/null 2>&1 &'
+'python3 manage.py celerybeat --loglevel=DEBUG --pidfile=celerybeat.pid > /dev/null 2>&1 &'
