@@ -42,6 +42,7 @@ nohup ./jmeter/run-performance-tests.sh -m 4G -u 1 -u10 -u 100 -u 200 -u 300 -u 
 
 cd jmeter/
 ./create-summary-csv.sh -n ballerina -p ballerina -g gcviewer.jar -d ~/results
+./create-summary-csv.sh -n wso2-ei -p wso2-ei -g gcviewer.jar -d ~/results
 
 =====================================================
 /usr/lib/ballerina/ballerina-0.991.0/bin/ballerina run -e b7a.runtime.scheduler.threadpoolsize=500 --sourceroot "/home/aathmsn/IdeaProjects/Restful Services" guide 
@@ -220,7 +221,8 @@ nohup ./jmeter/run-performance-tests.sh -m 4G -u 100 -u 250 -u 500 -b 50 -b 1024
 allocation tests
 jfr
 ====================================
-export FLAMEGRAPH_DIR=~/Downloads/FlameGraph/
+cd ~/GitProjectsofothers/jfr-flame-graph/build/install/jfr-flame-graph/bin
+export FLAMEGRAPH_DIR=~/GitProjectsofothers/FlameGraph/
 ./create_flamegraph.sh -f ~/ballerina/bal/recording100.jfr -i > flamegraph100.svg
 ./create_flamegraph.sh -e allocation-tlab -f ~/ballerina/bal/recording100.jfr -i > flamegraph100_allocation.svg
 
@@ -305,8 +307,8 @@ Remote jmx jconsole
 
 JAVA_OPTS+=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=12345 -Dcom.sun.management.jmxremote.rmi.port=12345 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.local.only=false -Djava.rmi.server.hostname=localhost"
 
-ssh -L 12346:localhost:12346 wso2@192.168.32.4
-ssh -L 12345:localhost:12345 wso2@192.168.32.9
+ssh -L 12345:localhost:12345 wso2@192.168.32.4
+ssh -L 12346:localhost:12346 wso2@192.168.32.9
 
 jconsole localhost:12345
 jconsole localhost:12346
@@ -541,3 +543,147 @@ dvisible for 3 persons
 
 'python3 manage.py celery worker --loglevel=DEBUG --pool=threads --pidfile=celery.pid > /dev/null 2>&1 &'
 'python3 manage.py celerybeat --loglevel=DEBUG --pidfile=celerybeat.pid > /dev/null 2>&1 &'
+
+
+async tasks.py 
+onsuccess method setting taskmeta=None
+completely delete this results
+
+
+
+=================================================
+wso2 ei tuning
+=================================================
+build synapse
+build carbon mediator
+then build ei
+
+watch ei tutorial on how to run api
+
+maven resume mvn resume
+mvn <goals> -rf :wso2ei
+mvn clean install -rf :wso2ei -Dmaven.test.skip=true
+mvn clean install -Dmaven.test.skip=true
+
+Reactor Summary for Apache Axis2 Transport 2.0.0-wso2v42-SNAPSHOT
+Reactor Summary for WSO2 Carbon - Platform Aggregator Pom 4.7.18-SNAPSHOT
+Reactor Summary for Apache Synapse 2.1.7-wso2v137-SNAPSHOT 
+Reactor Summary for WSO2 Carbon Mediation - Aggregator Pom 4.7.25-SNAPSHOT
+
+
+
+
+=========================================
+Add MBean connection in wso2-synapse
+=========================================
+ServerHandler and ListenerContextbuilder
+ClientHandler
+BaseConfiguration
+=========================================
+
+=======================================
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ ls distribution/target/wso2ei-6.6.0-SNAPSHOT
+wso2ei-6.6.0-SNAPSHOT/     wso2ei-6.6.0-SNAPSHOT.zip
+
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ ls distribution/target/wso2ei-6.6.0-SNAPSHOT/
+bin/                LICENSE.txt         samples/
+conf/               patches/            servicepacks/
+dbscripts/          README.txt          updates/
+dropins/            release-notes.html  webapp-mode/
+extensions/         repository/         wso2/
+lib/                resources/     
+     
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ ls distribution/target/wso2ei-6.6.0-SNAPSHOT/patches/^C
+
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ ls
+components    gh-docs              LICENSE     product-scenarios         target
+distribution  hs_err_pid27202.log  migration   pull_request_template.md  tools
+docs          integration          p2-profile  README.md
+features      issue_template.md    pom.xml     samples
+
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ find . -iname "dropins"
+./distribution/target/wso2ei-6.6.0-SNAPSHOT/dropins
+./integration/mediation-tests/tests-other/src/test/resources/artifacts/ESB/server/dropins
+
+aathmsn@aathman:~/GitProjectsofothers/wso2 ei tuning/product-ei$ patch1234
+========================================================
+
+
+
+
+synapse threadpool executor for clone,
+
+
+./integrator.sh --debug 5005
+./integrator.sh -DenablePrometheusApi
+./integrator.sh -DportOffset=1
+
+search for the jar version used in wso2 6.5 for example get the version of synapse used, go to the github and search the tag for that version and create a new branch by checkout
+git checkout -b v2.1.7-wso2v111 v2.1.7-wso2v111
+you will get the same version when you build this.
+make a new directory with 4numbers for example patch1111 and copy the built jar, it will be applied to the ei 
+change the name of the jar from synapse-core-2.1.7-wso2v111.jar to synapse-core_2.1.7.wso2v111.jar
+get jar from orbit target for wso2-axis2 build
+=======================================================
+Debug Ballerina Source Code
+=======================================================
+Malith aiya asked me to ask you how to debug ballerina program to see the java level implementation
+java level code execution
+
+In ballerina repo
+there is a Class called Scheduler
+scheduler execution starts with the start() method
+
+ballerina build generates a jar file
+run that jar with java remote debug args
+
+java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server,suspend=y,address=5005 h1c_h1c_passthrough_alpha.jar --b7a.observability.enabled=true
+
+java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 basic-worker-actions-executable.jar
+
+============================================
+Installing wso2-ei performance tests in servers
+============================================
+wso2@wso2-System-Product-Name:~$ sudo ~/setup/setup-jmeter-client.sh -k ~/.ssh/ballerina_key -i ~/ -f ~/Downloads/jmeter-installer.tgz -c ~/ -a ei -n 192.168.32.4 -a netty -n 192.168.32.9
+javawso2wso2123
+
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i DirectProxy -i CBRProxy -i CBRSOAPHeaderProxy -i CBRTransportHeaderProxy -i SecureProxy -i XSLTEnhancedProxy -i XSLTProxy
+
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i DirectProxy            	Passthrough Baseconf
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i CBRProxy               	Passthrough Baseconf
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i CBRSOAPHeaderProxy    		Passthrough Baseconf
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i CBRTransportHeaderProxy	Passthrough Baseconf
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i XSLTEnhancedProxy		Passthrough Baseconf
+./jmeter/run-ei-performance-tests.sh -m 4G  -u50  -b 1024 -s 0 -d 3600 -w 120 -i XSLTProxy			Passthrough Baseconf
+
+change http-nio-9763-exec  and http-nio-9763-Acceptor thread size threadpool size from wso2ei/conf/tomcat/catalina-server.xml 
+
+
+
+
+===================================================
+sudo docker build -t  aathmant/jmeterspring-boot:v1 .
+sudo docker push aathmant/jmeter-spring-boot:v1
+
+sudo docker build -t  aathmant/netty-echo:v1 .
+sudo docker push aathmant/netty-echo:v1
+
+sudo docker run --memory="1G" --cpuset-cpus="2" --name jmeter -it jmeter:v1 bash
+sudo docker run --memory="6G" --cpuset-cpus="2" --name jmeter -it aathmant/jmeter-spring-boot:v1 bash
+sudo docker ps
+sudo docker stats
+sudo docker exec -it pensive_poincare bash
+
+sudo docker run -p 8688:8688 -p 9797:9797 --memory="6G" --cpuset-cpus="2" --name prime anushiya/ballerina-1.0.2-prime-testing:v2
+sudo docker run -p 9000:9000  --memory="6G" --cpuset-cpus="2" --name prime anushiya/app:latest
+
+sudo docker run -p 8688:8688 --memory="6G" --cpuset-cpus="2" --name netty -it aathmant/netty-echo:v1 bash
+================================================
+wso2-ei logs
+================================================
+wso2@wso2-System-Product-Name:~/wso2ei/repository/logs$ tail -f wso2carbon.log 
+
+
+Docker test
+keep alive on/off 
+1,2 CPU netty-echo
